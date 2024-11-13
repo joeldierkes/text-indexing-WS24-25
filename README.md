@@ -29,14 +29,14 @@ the cli arguments.
 
 ## ToDo
 
-- [ ] 🌲 Implement the general trie traversal routines
+- [x] 🌲 Implement the general trie traversal routines
   - [x] Insert
   - [x] Contains
-  - [ ] Delete
-- [ ] 📋 Implement the fixed sized array version
+  - [x] Delete
+- [x] 📋 Implement the fixed sized array version
   - [x] Insert
   - [x] Contains
-  - [ ] Delete
+  - [x] Delete
 - [ ] 📏 Implement the variable sized array version
   - [ ] Insert
   - [ ] Contains
@@ -48,4 +48,5 @@ the cli arguments.
 - [x] Add the code to handle the cli
 - [x] Add the contruction from input file routine
 - [x] Add the queries from input file routine
+- [ ] Format the output according to the task
 - [ ] Add a suitable test suite

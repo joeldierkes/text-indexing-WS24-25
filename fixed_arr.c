@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdlib.h>
 
 #include "specific_trie.h"
@@ -36,12 +37,22 @@ bool insert_specific(struct trie_tree *root, struct trie_tree **child, char *ele
     root->children[idx] = *child;
 
     if (*(element + 1) == '\0') {
-      (*child)->is_terminal = true;
+      set_terminal(*child);
       return true;
     }
   }
 
   return false;
+}
+
+void delete_empty_child(struct trie_tree *root, char *element) {
+  size_t idx = char_to_index(*element);
+
+  // Note that this is disabled in release mode.
+  assert(number_children(root->children[idx]) == 0);
+
+  free(root->children[idx]);
+  root->children[idx] = NULL;
 }
 
 size_t number_children(struct trie_tree* root) {
@@ -78,6 +89,10 @@ void get_labels(struct trie_tree *root, char *labels) {
   }
 }
 
-bool is_terminal(struct trie_tree* root) {
+bool is_terminal(struct trie_tree *root) {
   return root->is_terminal;
+}
+
+void set_terminal(struct trie_tree *root) {
+  root->is_terminal = true;
 }

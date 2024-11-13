@@ -10,6 +10,8 @@ void init(struct trie_tree **root) {
 
 bool insert(struct trie_tree *root, char *element) {
   if (*element == '\0') {
+    // We could not insert the word already and are at the end. This
+    // means that the word is already contained in the tree.
     return false;
   }
 
@@ -19,11 +21,25 @@ bool insert(struct trie_tree *root, char *element) {
     return true;
   }
 
+  if (*(element + 1) == '\0') {
+    // We know that this is the last character in the word and the
+    // suffix or word exists in the trie.
+
+    if (is_terminal(child)) {
+      // The word already exists in the trie.
+      return false;
+    }
+
+    set_terminal(child);
+    return true;
+  }
+
   return insert(child, element + 1); 
 }
 
 bool contains(struct trie_tree *root, char *element) {
   if (*element == '\0') {
+    // The element does not exist in the trie
     return false;
   }
 
@@ -41,8 +57,58 @@ bool contains(struct trie_tree *root, char *element) {
   return contains(child, element + 1);
 }
 
+bool delete_helper(struct trie_tree *root, char *element, bool *should_delete) {
+  if (*element == '\0') {
+    // The element does not exist in the trie
+    return false;
+  }
+
+  struct trie_tree *child;
+
+  get_specific(root, &child, element);
+  if (!child) {
+    // The element does not exist in the trie
+    return false;
+  }
+
+  if (*(element + 1) == '\0' && is_terminal(child) && number_children(child) == 0) {
+    // At this point we know that the child is _our_ leaf (this is
+    // important if a suffix of our word without any children is
+    // contained in the trie as well). We can safely remove it and
+    // remove all parents till there is one with other children.
+
+    *should_delete = true;
+    delete_empty_child(root, element);
+    return true;
+  }
+
+  if (delete_helper(child, element + 1, should_delete)) {
+    if (!*should_delete) {
+      // This is the case if there exists some other children down of
+      // the current path. We don't have to do anything.
+      return true;
+    }
+
+    if (number_children(child) != 0) {
+      // Now we don't have to delete anything anymore. There exists
+      // another child.
+      *should_delete = false;
+      return true;
+    }
+
+    // At this point we know that the search was sucessfull and we
+    // have no other children.
+    delete_empty_child(root, element);
+
+    return true;
+  } else {
+    return false;
+  }
+}
+
 bool delete(struct trie_tree *root, char *element) {
-  return false;
+  bool should_delete = false;
+  return delete_helper(root, element, &should_delete);
 }
 
 void print_dot_helper(struct trie_tree *root, char label, char *prefix) {
