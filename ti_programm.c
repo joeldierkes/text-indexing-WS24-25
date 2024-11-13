@@ -29,7 +29,10 @@ static void die(int line_number, const char * format, ...)
 void insert_multiple(struct trie_tree *root, char *s) {
   while (true) {
     insert(root, s);
-    while (*(s++) != '\n');
+    while (*(s++) != '\0');
+    if (*s == '\n') {
+      s++;
+    }
     if (*s == '\0') {
       break;
     }
