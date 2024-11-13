@@ -15,8 +15,3 @@ bool delete(struct trie_tree*, char*);
 
 // Prints the DOT representation of the Trie to stdout. This is useful for debugging.
 void print_dot(struct trie_tree*);
-
-
-// This function inserts multiple word in a `trie_tree` from a given string.
-// The string has to contain one word per line, with each word ending in '\0'.
-void insert_multiple(struct trie_tree*, char*);

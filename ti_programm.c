@@ -19,6 +19,24 @@ static void die(int line_number, const char * format, ...)
     exit (1);
 }
 
+// Inserts the words given in `s` into `root`.
+//
+// `s` contains one word per line, with each word ending in
+// '\0'. (Don't ask me why.)
+//
+// Note that the last word must also contain a new line character at
+// the end!
+void insert_multiple(struct trie_tree *root, char *s) {
+  while (true) {
+    insert(root, s);
+    while (*(s++) != '\n');
+    if (*s == '\0') {
+      break;
+    }
+  }
+}
+
+
 // Executes the queries given by `queries`.
 //
 // The queries follow a specific (probably ill defined by me) grammar:

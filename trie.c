@@ -75,13 +75,3 @@ void print_dot(struct trie_tree *root) {
   print_dot_helper(root, '_', "a");
   printf("}\n");
 }
-
-void insert_multiple(struct trie_tree *root, char *s) {
-  while (true) {
-    insert(root, s);
-    while (*(s++) != '\n');
-    if (*s == '\0') {
-      break;
-    }
-  }
-}
