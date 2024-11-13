@@ -38,8 +38,7 @@ bool contains(struct trie_tree *root, char *element) {
     return true;
   }
 
-  return contains(child, element + 1); 
-
+  return contains(child, element + 1);
 }
 
 bool delete(struct trie_tree *root, char *element) {

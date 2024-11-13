@@ -31,11 +31,11 @@ the cli arguments.
 
 - [ ] 🌲 Implement the general trie traversal routines
   - [x] Insert
-  - [ ] Contains
+  - [x] Contains
   - [ ] Delete
 - [ ] 📋 Implement the fixed sized array version
   - [x] Insert
-  - [ ] Contains
+  - [x] Contains
   - [ ] Delete
 - [ ] 📏 Implement the variable sized array version
   - [ ] Insert
