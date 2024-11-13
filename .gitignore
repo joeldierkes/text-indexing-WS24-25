@@ -1,0 +1,8 @@
+tmp
+*~
+*.svg
+*.o
+*.html
+*.txt
+
+ti_program
