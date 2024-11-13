@@ -7,6 +7,7 @@
 #include "trie.h"
 
 typedef void (action_callback)(struct trie_tree*);
+void nothing_callback(struct trie_tree* _) {}
 
 static void die(int line_number, const char * format, ...)
 {
@@ -162,7 +163,7 @@ int main(int argc, char** argv) {
   insert_multiple(root, fbuffer);
   free(fbuffer);
 
-  execute_queries(root, queries, print_dot);
+  execute_queries(root, queries, nothing_callback);
 
   switch(mode) {
   case DOT_MODE:

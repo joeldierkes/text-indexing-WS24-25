@@ -82,10 +82,26 @@ bool delete_helper(struct trie_tree *root, char *element, bool *should_delete) {
     return true;
   }
 
+  if (*(element + 1) == '\0' && is_terminal(child)) {
+    // This is the case if the word is a suffix of another word in the
+    // trie.
+
+    *should_delete = false;
+    unset_terminal(child);
+    return true;
+  }
+
   if (delete_helper(child, element + 1, should_delete)) {
     if (!*should_delete) {
       // This is the case if there exists some other children down of
       // the current path. We don't have to do anything.
+      return true;
+    }
+
+    if (is_terminal(child)) {
+      // A suffix of the deleted word is contained in the subtree.
+
+      *should_delete = false;
       return true;
     }
 

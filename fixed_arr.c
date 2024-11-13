@@ -96,3 +96,7 @@ bool is_terminal(struct trie_tree *root) {
 void set_terminal(struct trie_tree *root) {
   root->is_terminal = true;
 }
+
+void unset_terminal(struct trie_tree *root) {
+  root->is_terminal = false;
+}
