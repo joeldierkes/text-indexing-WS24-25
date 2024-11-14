@@ -50,3 +50,5 @@ the cli arguments.
 - [x] Add the queries from input file routine
 - [ ] Format the output according to the task
 - [ ] Add a suitable test suite
+- [ ] Controll if the query null terminator before the action is
+      prefixed with a space
