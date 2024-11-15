@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -6,8 +7,11 @@
 
 #include "trie.h"
 
-typedef void (action_callback)(struct trie_tree*);
-void nothing_callback(struct trie_tree* _) {}
+typedef void (action_callback)(struct trie_tree*, bool status);
+void nothing_callback(struct trie_tree* _, bool __) {}
+void print_status_callback(struct trie_tree* _, bool status) {
+  printf("%s\n", status ? "true" : "false");
+}
 
 static void die(int line_number, const char * format, ...)
 {
@@ -85,9 +89,7 @@ void execute_queries(struct trie_tree *root, char *queries, action_callback call
       die(__LINE__, "Ill definined action! %c", queries);
     }
 
-    action(root, query);
-    //printf("%s\n", action(root, query) ? "true" : "false");
-    callback(root);
+    callback(root, action(root, query));
 
     queries = queries + 2;
     if (*queries == '\0') {
@@ -131,14 +133,16 @@ const char *USAGE_INFORMATION = "Usage: ti_programm [-du] INPUT_FILE QUERY_FILE\
   "The main entry point for the text indexing exercise 2024/25.\n"
   "\n"
   "options:\n"
-  "-d   DOT_MODE,  displays the generated trie in a DOT readable format.\n"
-  "-u   DUMP_MODE, dumps the trie one word per line.\n";
+  "-t   TASK_MODE,  displays the execution status of each word in the query. One status per line. DEFAULT\n"
+  "-d   DOT_MODE,   displays the generated trie in a DOT readable format.\n"
+  "-u   DUMP_MODE,  dumps the trie one word per line.\n";
 
 int main(int argc, char** argv) {
   int opt;
-  enum { DOT_MODE, DUMP_MODE } mode = DOT_MODE;
+  enum { TASK_MODE, DOT_MODE, DUMP_MODE } mode = TASK_MODE;
   while ((opt = getopt(argc, argv, "du")) != -1) {
     switch (opt) {
+    case 't': mode = TASK_MODE; break;
     case 'd': mode = DOT_MODE; break;
     case 'u': mode = DUMP_MODE; break;
     default:;
@@ -163,7 +167,11 @@ int main(int argc, char** argv) {
   insert_multiple(root, fbuffer);
   free(fbuffer);
 
-  execute_queries(root, queries, nothing_callback);
+  execute_queries(
+    root,
+    queries,
+    mode == TASK_MODE ? print_status_callback: nothing_callback
+  );
 
   switch(mode) {
   case DOT_MODE:
@@ -171,6 +179,8 @@ int main(int argc, char** argv) {
     break;
   case DUMP_MODE:
     die(__LINE__, "Not implemented yet");
+    break;
+  default:
     break;
   }
 }
