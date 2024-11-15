@@ -28,11 +28,12 @@ echo "TAP version 14"
 
 function assert_string() {
     n=$(($n+1))
-    if [[ $2 =~ $3 ]]; then
+    if [[ "$2" =~ "$3" ]]; then
 	echo "ok $n - $1"
     else
 	echo "not ok $n - $1"
 	echo "$2"
+	echo "$3"
 	ret=1
     fi
 }
@@ -41,18 +42,18 @@ function assert_string() {
 
 function test_usage_information() {
     out=`"$BIN"`
-    assert_string "Displays usage information" "$out" "Usage: ti_programm \[-du\] INPUT_FILE"
+    assert_string "Displays usage information" "$out" "Usage: ti_programm [-du] INPUT_FILE"
 }
 
 
 function test_trie_creation() {
     creation=`mktemp`
-    echo "apple\0\napplep\0\napp\0\n" > $creation
+    echo -ne "apple\0\napplep\0\napp\0\n" > "$creation"
     queries=`mktemp`
-    echo "apple\0c\napplepp\0c\nap\0c\n" > $queries
+    echo -ne "apple\0c\napplepp\0c\nap\0c\n" > "$queries"
 
-    out=`"$BIN" "$creation $queries"`
-    assert_string "Trie creation" "$out" ""
+    out=`"$BIN" "$creation" "$queries"`
+    assert_string "Trie creation" "$out" $'true\nfalse\nfalse'
 
     rm "$creation"
     rm "$queries"

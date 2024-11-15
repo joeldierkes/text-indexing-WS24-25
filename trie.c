@@ -50,7 +50,7 @@ bool contains(struct trie_tree *root, char *element) {
     return false;
   }
 
-  if (is_terminal(child)) {
+  if (*(element + 1) == '\0' && is_terminal(child)) {
     return true;
   }
 
