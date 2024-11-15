@@ -27,22 +27,17 @@ void init_specific(struct trie_tree ** root) {
   *root = calloc(1, sizeof(struct trie_tree));
 };
 
-bool insert_specific(struct trie_tree *root, struct trie_tree **child, char *element, void (*init)(struct trie_tree**)) {
-  size_t idx = char_to_index(*element);
+bool insert_specific(struct trie_tree *root, struct trie_tree **child, char c, void (*init)(struct trie_tree**)) {
+  size_t idx = char_to_index(c);
 
   if (root->children[idx] != NULL) {
     *child = root->children[idx];
+    return false;
   } else {
     init(child);
     root->children[idx] = *child;
-
-    if (*(element + 1) == '\0') {
-      set_terminal(*child);
-      return true;
-    }
+    return true;
   }
-
-  return false;
 }
 
 void delete_empty_child(struct trie_tree *root, char *element) {

@@ -10,20 +10,17 @@ void init(struct trie_tree **root) {
 
 bool insert(struct trie_tree *root, char *element) {
   if (*element == '\0') {
-    // We could not insert the word already and are at the end. This
-    // means that the word is already contained in the tree.
+    // This is only the case if the word is empty.
     return false;
   }
 
   struct trie_tree *child;
 
-  if (insert_specific(root, &child, element, init)) {
-    return true;
-  }
+  insert_specific(root, &child, *element, init);
 
   if (*(element + 1) == '\0') {
-    // We know that this is the last character in the word and the
-    // suffix or word exists in the trie.
+    // We know that this is the last character in the word, i.e., the
+    // word is completly processed.
 
     if (is_terminal(child)) {
       // The word already exists in the trie.

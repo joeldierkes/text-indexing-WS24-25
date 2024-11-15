@@ -6,7 +6,19 @@
 struct trie_tree;
 
 void init_specific(struct trie_tree**);
-bool insert_specific(struct trie_tree*, struct trie_tree**, char*, void(struct trie_tree**));
+
+// Inserts a character into the trie.
+//
+// Returns `true` if the character got inserted and a new node was
+// created, `false` otherwise.
+//
+// Params:
+//   `parent`: The parent node to insert the character.
+//   `child`: A reference to the child node. This will be updated by this function.
+//   `c`: The character to insert.
+//   `init`: An initializer function for the trie node.
+bool insert_specific(struct trie_tree *parent, struct trie_tree* *child, char c, void(*init)(struct trie_tree**));
+
 void delete_empty_child(struct trie_tree*, char*);
 
 size_t number_children(struct trie_tree*);
