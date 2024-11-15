@@ -38,6 +38,29 @@ function assert_string() {
     fi
 }
 
+# Calls the binary and compared the test output
+#
+# Params:
+#   $1: The test description.
+#   $2: The creation input string of the binary.
+#   $3: The query input string of the binary.
+#   $4: The expected output.
+function test_task_output() {
+    creation=`mktemp`
+    echo -ne "$2" > "$creation"
+    queries=`mktemp`
+    echo -ne "$3" > "$queries"
+
+    # Convert the bash '\n' character to an ANSI C quoted newline
+    o=$(echo -ne "$4")
+
+    out=`"$BIN" "$creation" "$queries"`
+    assert_string "$1" "$out" "$o"
+
+    rm "$creation"
+    rm "$queries"
+}
+
 # Tests come here
 
 function test_usage_information() {
@@ -47,16 +70,10 @@ function test_usage_information() {
 
 
 function test_trie_creation() {
-    creation=`mktemp`
-    echo -ne "apple\0\napplep\0\napp\0\n" > "$creation"
-    queries=`mktemp`
-    echo -ne "apple\0c\napplepp\0c\nap\0c\n" > "$queries"
-
-    out=`"$BIN" "$creation" "$queries"`
-    assert_string "Trie creation" "$out" $'true\nfalse\nfalse'
-
-    rm "$creation"
-    rm "$queries"
+    test_task_output "Trie creation" \
+		     "apple\0\napplep\0\napp\0\n" \
+		     "apple\0c\napplepp\0c\nap\0c\n" \
+		     "true\nfalse\nfalse"
 }
 
 function test_trie_insertion() {
