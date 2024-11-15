@@ -6,3 +6,5 @@ tmp
 *.txt
 
 ti_programm
+
+callgrind.out*

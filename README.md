@@ -27,6 +27,11 @@ options:
 Note that some nice-to-have features are added and can be opted in via
 the cli arguments.
 
+### Tools
+
+Some common tools are found under `tools`. They aim to support the
+development process.
+
 ## ToDo
 
 - [x] 🌲 Implement the general trie traversal routines
@@ -52,3 +57,4 @@ the cli arguments.
 - [ ] Add a suitable test suite
 - [ ] Controll if the query null terminator before the action is
       prefixed with a space
+- [ ] Implement a cleanup (free) function

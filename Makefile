@@ -1,5 +1,6 @@
 CC = gcc
 CFLAGS  = -g -Wall -flto
+# CFLAGS  = -g -O2 -flto
 
 default: ti_programm
 
