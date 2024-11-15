@@ -70,10 +70,25 @@ function test_usage_information() {
 
 
 function test_trie_creation() {
-    test_task_output "Trie creation" \
+    test_task_output "Trie creation - One letter words" \
+		     "a\0\nb\0\nc\0\n" \
+		     "a\0c\nc\0c\nd\0c\n" \
+		     "true\ntrue\nfalse"
+
+    test_task_output "Trie creation - Non-overlapping words" \
+		     "apple\0\nbanana\0\ncar\0\n" \
+		     "apple\0c\ncar\0c\ndelete\0c\n" \
+		     "true\ntrue\nfalse"
+
+    test_task_output "Trie creation - Overlapping words" \
+		     "apple\0\napplication\0\naprentice\0\n" \
+		     "apple\0c\naprentice\0c\ndelete\0c\n" \
+		     "true\ntrue\nfalse"
+
+    test_task_output "Trie creation - Suffix words" \
 		     "apple\0\napplep\0\napp\0\n" \
-		     "apple\0c\napplepp\0c\nap\0c\n" \
-		     "true\nfalse\nfalse"
+		     "apple\0c\napplepp\0c\nap\0c\napplep\0c\n" \
+		     "true\nfalse\nfalse\ntrue"
 }
 
 function test_trie_insertion() {
