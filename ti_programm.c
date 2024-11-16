@@ -33,7 +33,8 @@ static void die(int line_number, const char *format, ...) {
 void insert_multiple(struct trie_tree *root, char *s) {
   while (true) {
     insert(root, s);
-    while (*(s++) != '\0');
+    while (*(s++) != '\0')
+      ;
     if (*s == '\n') {
       s++;
     }
@@ -71,21 +72,22 @@ void execute_queries(struct trie_tree *root, char *queries,
     char *query = queries;
     bool (*action)(struct trie_tree *, char *);
 
-    while (*(queries++) != '\0');
+    while (*(queries++) != '\0')
+      ;
 
     switch (*queries) {
-      case 'i':
-        action = insert;
-        break;
-      case 'c':
-        action = contains;
-        break;
-      case 'd':
-        action = delete;
-        break;
-      default:
-        action = NULL;
-        die(__LINE__, "Ill definined action! %c", queries);
+    case 'i':
+      action = insert;
+      break;
+    case 'c':
+      action = contains;
+      break;
+    case 'd':
+      action = delete;
+      break;
+    default:
+      action = NULL;
+      die(__LINE__, "Ill definined action! %c", queries);
     }
 
     callback(root, action(root, query));
@@ -144,16 +146,16 @@ int main(int argc, char **argv) {
   enum { TASK_MODE, DOT_MODE, DUMP_MODE } mode = TASK_MODE;
   while ((opt = getopt(argc, argv, "du")) != -1) {
     switch (opt) {
-      case 't':
-        mode = TASK_MODE;
-        break;
-      case 'd':
-        mode = DOT_MODE;
-        break;
-      case 'u':
-        mode = DUMP_MODE;
-        break;
-      default:;
+    case 't':
+      mode = TASK_MODE;
+      break;
+    case 'd':
+      mode = DOT_MODE;
+      break;
+    case 'u':
+      mode = DUMP_MODE;
+      break;
+    default:;
     }
   }
 
@@ -180,14 +182,14 @@ int main(int argc, char **argv) {
   free(queries);
 
   switch (mode) {
-    case DOT_MODE:
-      print_dot(root);
-      break;
-    case DUMP_MODE:
-      die(__LINE__, "Not implemented yet");
-      break;
-    default:
-      break;
+  case DOT_MODE:
+    print_dot(root);
+    break;
+  case DUMP_MODE:
+    die(__LINE__, "Not implemented yet");
+    break;
+  default:
+    break;
   }
 
   free_trie(&root);

@@ -9,8 +9,8 @@ repos:
   - repo: https://github.com/pocc/pre-commit-hooks
     rev: master
     hooks:
-      - id: clang-format
-        args: [--style=Google]
+      # - id: clang-format
+      #  args: [--style=Google]
       - id: clang-tidy
       # - id: oclint
       # - id: uncrustify
@@ -23,3 +23,4 @@ repos:
         name: run tests
         language: system
         entry: make test
+        pass_filenames: false
