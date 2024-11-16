@@ -1,27 +1,26 @@
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 #include "trie.h"
 
-typedef void (action_callback)(struct trie_tree*, bool status);
-void nothing_callback(struct trie_tree* _, bool __) {}
-void print_status_callback(struct trie_tree* _, bool status) {
+typedef void(action_callback)(struct trie_tree *, bool status);
+void nothing_callback(struct trie_tree *_, bool __) {}
+void print_status_callback(struct trie_tree *_, bool status) {
   printf("%s\n", status ? "true" : "false");
 }
 
-static void die(int line_number, const char * format, ...)
-{
-    va_list vargs;
-    va_start (vargs, format);
-    fprintf (stderr, "%d: ", line_number);
-    vfprintf (stderr, format, vargs);
-    fprintf (stderr, ".\n");
-    va_end (vargs);
-    exit (1);
+static void die(int line_number, const char *format, ...) {
+  va_list vargs;
+  va_start(vargs, format);
+  fprintf(stderr, "%d: ", line_number);
+  vfprintf(stderr, format, vargs);
+  fprintf(stderr, ".\n");
+  va_end(vargs);
+  exit(1);
 }
 
 // Inserts the words given in `s` into `root`.
@@ -43,7 +42,6 @@ void insert_multiple(struct trie_tree *root, char *s) {
     }
   }
 }
-
 
 // Executes the queries given by `queries`.
 //
@@ -67,26 +65,27 @@ void insert_multiple(struct trie_tree *root, char *s) {
 //
 // Note: This function does not check the grammar, it assumes that
 // `queries` is well defined.
-void execute_queries(struct trie_tree *root, char *queries, action_callback callback) {
+void execute_queries(struct trie_tree *root, char *queries,
+                     action_callback callback) {
   while (true) {
     char *query = queries;
-    bool (*action)(struct trie_tree*, char*);
+    bool (*action)(struct trie_tree *, char *);
 
     while (*(queries++) != '\0');
 
-    switch(*queries) {
-    case 'i':
-      action = insert;
-      break;
-    case 'c':
-      action = contains;
-      break;
-    case 'd':
-      action = delete;
-      break;
-    default:
-      action = NULL;
-      die(__LINE__, "Ill definined action! %c", queries);
+    switch (*queries) {
+      case 'i':
+        action = insert;
+        break;
+      case 'c':
+        action = contains;
+        break;
+      case 'd':
+        action = delete;
+        break;
+      default:
+        action = NULL;
+        die(__LINE__, "Ill definined action! %c", queries);
     }
 
     callback(root, action(root, query));
@@ -96,7 +95,6 @@ void execute_queries(struct trie_tree *root, char *queries, action_callback call
       break;
     }
   }
-
 }
 
 // Reads the entrie file content to memory.
@@ -115,8 +113,8 @@ void get_file_content(char *filename, char **content, size_t *bytes_read) {
   // Allocate memory to hold the entire file
   *content = malloc((*bytes_read + 1) * sizeof(char));
   if (*content == NULL) {
-      fclose(file);
-      die(__LINE__, "Memory allocation failed");
+    fclose(file);
+    die(__LINE__, "Memory allocation failed");
   }
 
   size_t bytesRead = fread(*content, 1, *bytes_read, file);
@@ -130,24 +128,32 @@ void get_file_content(char *filename, char **content, size_t *bytes_read) {
   (*content)[*bytes_read] = '\0';
 }
 
-const char *USAGE_INFORMATION = "Usage: ti_programm [-du] INPUT_FILE QUERY_FILE\n"
-  "\n"
-  "The main entry point for the text indexing exercise 2024/25.\n"
-  "\n"
-  "options:\n"
-  "-t   TASK_MODE,  displays the execution status of each word in the query. One status per line. DEFAULT\n"
-  "-d   DOT_MODE,   displays the generated trie in a DOT readable format.\n"
-  "-u   DUMP_MODE,  dumps the trie one word per line.\n";
+const char *USAGE_INFORMATION =
+    "Usage: ti_programm [-du] INPUT_FILE QUERY_FILE\n"
+    "\n"
+    "The main entry point for the text indexing exercise 2024/25.\n"
+    "\n"
+    "options:\n"
+    "-t   TASK_MODE,  displays the execution status of each word in the query. "
+    "One status per line. DEFAULT\n"
+    "-d   DOT_MODE,   displays the generated trie in a DOT readable format.\n"
+    "-u   DUMP_MODE,  dumps the trie one word per line.\n";
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   int opt;
   enum { TASK_MODE, DOT_MODE, DUMP_MODE } mode = TASK_MODE;
   while ((opt = getopt(argc, argv, "du")) != -1) {
     switch (opt) {
-    case 't': mode = TASK_MODE; break;
-    case 'd': mode = DOT_MODE; break;
-    case 'u': mode = DUMP_MODE; break;
-    default:;
+      case 't':
+        mode = TASK_MODE;
+        break;
+      case 'd':
+        mode = DOT_MODE;
+        break;
+      case 'u':
+        mode = DUMP_MODE;
+        break;
+      default:;
     }
   }
 
@@ -169,22 +175,19 @@ int main(int argc, char** argv) {
   insert_multiple(root, fbuffer);
   free(fbuffer);
 
-  execute_queries(
-    root,
-    queries,
-    mode == TASK_MODE ? print_status_callback: nothing_callback
-  );
+  execute_queries(root, queries,
+                  mode == TASK_MODE ? print_status_callback : nothing_callback);
   free(queries);
 
-  switch(mode) {
-  case DOT_MODE:
-    print_dot(root);
-    break;
-  case DUMP_MODE:
-    die(__LINE__, "Not implemented yet");
-    break;
-  default:
-    break;
+  switch (mode) {
+    case DOT_MODE:
+      print_dot(root);
+      break;
+    case DUMP_MODE:
+      die(__LINE__, "Not implemented yet");
+      break;
+    default:
+      break;
   }
 
   free_trie(&root);

@@ -1,12 +1,11 @@
 #include "trie.h"
-#include "specific_trie.h"
 
 #include <stdio.h>
 #include <string.h>
 
-void init(struct trie_tree **root) {
-  init_specific(root);
-}
+#include "specific_trie.h"
+
+void init(struct trie_tree **root) { init_specific(root); }
 
 bool insert(struct trie_tree *root, char *element) {
   if (*element == '\0') {
@@ -68,7 +67,8 @@ bool delete_helper(struct trie_tree *root, char *element, bool *should_delete) {
     return false;
   }
 
-  if (*(element + 1) == '\0' && is_terminal(child) && number_children(child) == 0) {
+  if (*(element + 1) == '\0' && is_terminal(child) &&
+      number_children(child) == 0) {
     // At this point we know that the child is _our_ leaf (this is
     // important if a suffix of our word without any children is
     // contained in the trie as well). We can safely remove it and
@@ -124,24 +124,23 @@ bool delete(struct trie_tree *root, char *element) {
   return delete_helper(root, element, &should_delete);
 }
 
-void free_trie(struct trie_tree* *root) {
-  free_trie_specific(root);
-}
+void free_trie(struct trie_tree **root) { free_trie_specific(root); }
 
 void print_dot_helper(struct trie_tree *root, char label, char *prefix) {
-  printf("%s [label=\"%c\" shape=%s];\n", prefix, label, is_terminal(root) ? "doublecircle" : "circle");
+  printf("%s [label=\"%c\" shape=%s];\n", prefix, label,
+         is_terminal(root) ? "doublecircle" : "circle");
 
   size_t prefix_len = strlen(prefix);
   char *new_prefix = calloc(prefix_len + 1, sizeof(char));
   strcpy(new_prefix, prefix);
 
   size_t n = number_children(root);
-  struct trie_tree **children = calloc(n, sizeof(struct trie_tree*));
+  struct trie_tree **children = calloc(n, sizeof(struct trie_tree *));
   get_children(root, children);
   char *labels = calloc(n + 1, sizeof(char));
   get_labels(root, labels);
 
-  for(size_t i = 0; i < n; ++i) {
+  for (size_t i = 0; i < n; ++i) {
     new_prefix[prefix_len] = labels[i];
     printf("%s -> %s;\n", prefix, new_prefix);
     print_dot_helper(children[i], labels[i], new_prefix);
