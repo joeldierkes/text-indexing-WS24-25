@@ -31,7 +31,7 @@ bool insert(struct trie_tree *root, char *element) {
     return true;
   }
 
-  return insert(child, element + 1); 
+  return insert(child, element + 1);
 }
 
 bool contains(struct trie_tree *root, char *element) {
