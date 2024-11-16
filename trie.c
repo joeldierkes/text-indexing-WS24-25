@@ -124,6 +124,10 @@ bool delete(struct trie_tree *root, char *element) {
   return delete_helper(root, element, &should_delete);
 }
 
+void free_trie(struct trie_tree* *root) {
+  free_trie_specific(root);
+}
+
 void print_dot_helper(struct trie_tree *root, char label, char *prefix) {
   printf("%s [label=\"%c\" shape=%s];\n", prefix, label, is_terminal(root) ? "doublecircle" : "circle");
 

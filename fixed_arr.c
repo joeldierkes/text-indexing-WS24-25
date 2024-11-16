@@ -95,3 +95,14 @@ void set_terminal(struct trie_tree *root) {
 void unset_terminal(struct trie_tree *root) {
   root->is_terminal = false;
 }
+
+void free_trie_specific(struct trie_tree* *root) {
+  for(size_t i = 0; i < FIXED_SIZE_LEN; ++i) {
+    if ((*root)->children[i] != NULL) {
+      free_trie_specific(&((*root)->children[i]));
+    }
+  }
+
+  free(*root);
+  *root = NULL;
+}

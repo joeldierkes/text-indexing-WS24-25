@@ -113,7 +113,7 @@ void get_file_content(char *filename, char **content, size_t *bytes_read) {
   rewind(file);
 
   // Allocate memory to hold the entire file
-  *content = malloc(*bytes_read);
+  *content = malloc((*bytes_read + 1) * sizeof(char));
   if (*content == NULL) {
       fclose(file);
       die(__LINE__, "Memory allocation failed");
@@ -126,6 +126,8 @@ void get_file_content(char *filename, char **content, size_t *bytes_read) {
     die(__LINE__, "File read error!");
   }
   fclose(file);
+
+  (*content)[*bytes_read] = '\0';
 }
 
 const char *USAGE_INFORMATION = "Usage: ti_programm [-du] INPUT_FILE QUERY_FILE\n"
@@ -172,6 +174,7 @@ int main(int argc, char** argv) {
     queries,
     mode == TASK_MODE ? print_status_callback: nothing_callback
   );
+  free(queries);
 
   switch(mode) {
   case DOT_MODE:
@@ -183,4 +186,6 @@ int main(int argc, char** argv) {
   default:
     break;
   }
+
+  free_trie(&root);
 }

@@ -13,5 +13,7 @@ bool contains(struct trie_tree*, char*);
 // Deletes an element from the Trie. Returns `true` if deleted successfully. `false` otherwise.
 bool delete(struct trie_tree*, char*);
 
+void free_trie(struct trie_tree**);
+
 // Prints the DOT representation of the Trie to stdout. This is useful for debugging.
 void print_dot(struct trie_tree*);

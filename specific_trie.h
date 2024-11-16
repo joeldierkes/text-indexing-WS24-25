@@ -28,3 +28,4 @@ void get_labels(struct trie_tree*, char*);
 void set_terminal(struct trie_tree*);
 void unset_terminal(struct trie_tree*);
 bool is_terminal(struct trie_tree*);
+void free_trie_specific(struct trie_tree**);

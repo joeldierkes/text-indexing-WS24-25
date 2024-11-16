@@ -54,8 +54,17 @@ function test_task_output() {
     # Convert the bash '\n' character to an ANSI C quoted newline
     o=$(echo -ne "$4")
 
-    out=`"$BIN" "$creation" "$queries"`
+    out=`$BIN $creation $queries`
     assert_string "$1" "$out" "$o"
+
+    n=$(($n+1))
+    vout=$(valgrind --error-exitcode=1 --leak-check=full --track-origins=yes $BIN $creation $queries 2>&1)
+    if [[ $? -eq 0 ]]; then
+        echo "ok $n - [Valgrind] $1"
+    else
+	echo "not ok $n - [Valgrind] $1"
+	echo "$vout$"
+    fi
 
     rm "$creation"
     rm "$queries"
