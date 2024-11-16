@@ -101,13 +101,25 @@ function test_trie_creation() {
 }
 
 function test_trie_insertion() {
-    file=`mktemp`
-    echo "apple\0\n" > $file
+    test_task_output "Trie insertion - One letter words" \
+		     "a\0\nb\0\nc\0\n" \
+		     "a\0i\nd\0i\ne\0i\nb\0i\n" \
+		     "false\ntrue\ntrue\nfalse"
 
-    out=`"$BIN" "$file"`
-    assert_string "Trie insertion" "$out" ""
+    test_task_output "Trie insertion - Non-overlapping words" \
+		     "apple\0\nbaby\0\nclass\0\n" \
+		     "apple\0i\ndab\0i\nextacy\0i\nbaby\0i\n" \
+		     "false\ntrue\ntrue\nfalse"
 
-    rm "$file"
+    test_task_output "Trie insertion - Overlapping words" \
+		     "apple\0\nbaby\0\nclass\0\n" \
+		     "apple\0i\nappletree\0i\nclassic\0i\nbaby\0i\n" \
+		     "false\ntrue\ntrue\nfalse"
+
+    test_task_output "Trie insertion - Overlapping words" \
+		     "apple\0\nbaby\0\nclass\0\n" \
+		     "apple\0i\napp\0i\ncla\0i\nbaby\0i\n" \
+		     "false\ntrue\ntrue\nfalse"
 }
 
 function test_trie_contains() {
