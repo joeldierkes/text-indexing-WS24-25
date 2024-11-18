@@ -37,8 +37,8 @@ development process.
 
 The [`sqlplot-tools`](https://github.com/bingmann/sqlplot-tools/) can
 be used to generate performance plots. Run `make sqlplot-tools` to
-compile the tools. Make sure that the required dependencies by
-sqlplot-tools are installed.
+initialize the submodule and compile the tools. Make sure that the
+required dependencies by sqlplot-tools are installed.
 
 ## ToDo
 

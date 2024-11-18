@@ -22,8 +22,12 @@ clean:
 test: ti_programm
 	$(MAKE) -C tests
 
+.PHONY: init-submodules
+init-submodules:
+	git submodule update --init --recursive
+
 .PHONY: sqlplot-tools
-sqlplot-tools:
+sqlplot-tools: init-submodules
 	@( \
 		cd sqlplot-tools && \
 		mkdir -p build && \
