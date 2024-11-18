@@ -1,0 +1,3 @@
+[submodule "sqlplot-tools"]
+	path = sqlplot-tools
+	url = https://github.com/bingmann/sqlplot-tools/

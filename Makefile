@@ -21,3 +21,13 @@ clean:
 .PHONY: test
 test: ti_programm
 	$(MAKE) -C tests
+
+.PHONY: sqlplot-tools
+sqlplot-tools:
+	@( \
+		cd sqlplot-tools && \
+		mkdir -p build && \
+		cd build && \
+		cmake -DWITH_POSTGRESQL=OFF -DWITH_MYSQL=OFF .. \
+	)
+	$(MAKE) -C sqlplot-tools/build

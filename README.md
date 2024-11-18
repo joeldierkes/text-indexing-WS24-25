@@ -20,8 +20,9 @@ Usage: ti_programm [-du] INPUT_FILE QUERY_FILE
 The main entry point for the text indexing exercise 2024/25.
 
 options:
--d   DOT_MODE,  displays the generated trie in a DOT readable format.
--u   DUMP_MODE, dumps the trie one word per line.
+-t   TASK_MODE,  displays the execution status of each word in the query. One status per line. DEFAULT
+-d   DOT_MODE,   displays the generated trie in a DOT readable format.
+-u   DUMP_MODE,  dumps the trie one word per line.
 ```
 
 Note that some nice-to-have features are added and can be opted in via
@@ -31,6 +32,13 @@ the cli arguments.
 
 Some common tools are found under `tools`. They aim to support the
 development process.
+
+### Sqlplot-tools
+
+The [`sqlplot-tools`](https://github.com/bingmann/sqlplot-tools/) can
+be used to generate performance plots. Run `make sqlplot-tools` to
+compile the tools. Make sure that the required dependencies by
+sqlplot-tools are installed.
 
 ## ToDo
 
@@ -57,4 +65,12 @@ development process.
 - [ ] Add a suitable test suite
 - [ ] Controll if the query null terminator before the action is
       prefixed with a space
-- [ ] Implement a cleanup (free) function
+- [x] Implement a cleanup (free) function
+
+## Questions
+
+- [ ] Is there a space before the null terminator in the `query.txt`?
+- [ ] Ask for an example `creation` and `query` file.
+- [ ] Ask about the inconsistencies in the task file.
+- [ ] Ask about the setup the tests will be run on (SIMD, RAM).
+- [ ] Ask about the input files (i.e. distribution of characters, size).
