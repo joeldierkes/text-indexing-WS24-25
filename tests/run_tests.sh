@@ -123,19 +123,39 @@ function test_trie_insertion() {
 }
 
 function test_trie_contains() {
-    file=`mktemp`
-    echo "apple\0\n" > $file
+    test_task_output "Trie contains - One letter words" \
+		     "a\0\nb\0\nc\0\n" \
+		     "a\0c\nd\0c\nb\0c\n" \
+	             "true\nfalse\ntrue\n"
 
-    out=`"$BIN" "$file"`
-    assert_string "Trie contains" "$out" ""
+    test_task_output "Trie contains - Non-overlapping words" \
+		     "apple\0\nbaby\0\nclass\0\n" \
+                     "apple\0c\ndelete\0c\nbaby\0c\n" \
+                     "true\nfalse\ntrue\n"
+}
 
-    rm "$file"
+function test_trie_delete() {
+    test_task_output "Trie delete - One letter words" \
+		     "a\0\nb\0\nc\0\n" \
+		     "a\0d\nd\0d\na\0d\na\0c\n" \
+                     "true\nfalse\nfalse\nfalse\n"
+
+    test_task_output "Trie delete - Non-overlapping words" \
+		     "apple\0\nbaby\0\nclass\0\n" \
+		     "apple\0d\napple\0d\ndelete\0d\nbaby\0d\n" \
+                     "true\nfalse\nfalse\ntrue\n"
+
+    test_task_output "Trie delete - Overlapping words" \
+		     "apple\0\nappletree\0\nbaby\0\nclass\0\n" \
+		     "apple\0d\napple\0d\nappletree\0d\ndelete\0d\nbaby\0d\n" \
+                     "true\nfalse\ntrue\nfalse\ntrue\n"
 }
 
 test_usage_information
 test_trie_creation
 test_trie_insertion
 test_trie_contains
+test_trie_delete
 
 echo "1..$n"
 exit $ret
