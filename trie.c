@@ -8,28 +8,19 @@
 void init(struct trie_tree **root) { init_specific(root); }
 
 bool insert(struct trie_tree *root, char *element) {
-  if (*element == '\0') {
-    // This is only the case if the word is empty.
+  if (*element == '\0' && is_terminal(root)) {
+    // The word already exists in the trie
     return false;
   }
 
-  struct trie_tree *child;
-
-  insert_specific(root, &child, *element, init);
-
-  if (*(element + 1) == '\0') {
-    // We know that this is the last character in the word, i.e., the
-    // word is completly processed.
-
-    if (is_terminal(child)) {
-      // The word already exists in the trie.
-      return false;
-    }
-
-    set_terminal(child);
+  if(*element == '\0') {
+    // The word can be inserted
+    set_terminal(root);
     return true;
   }
 
+  struct trie_tree *child;
+  insert_specific(root, &child, *element, init);
   return insert(child, element + 1);
 }
 
