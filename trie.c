@@ -25,20 +25,21 @@ bool insert(struct trie_tree *root, char *element) {
 }
 
 bool contains(struct trie_tree *root, char *element) {
+  if (*element == '\0' && is_terminal(root)) {
+    // The element exists in the trie
+    return true;
+  }
+
   if (*element == '\0') {
     // The element does not exist in the trie
     return false;
   }
 
   struct trie_tree *child;
-
   get_specific(root, &child, element);
+
   if (!child) {
     return false;
-  }
-
-  if (*(element + 1) == '\0' && is_terminal(child)) {
-    return true;
   }
 
   return contains(child, element + 1);
