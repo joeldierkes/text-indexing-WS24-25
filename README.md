@@ -40,6 +40,20 @@ be used to generate performance plots. Run `make sqlplot-tools` to
 initialize the submodule and compile the tools. Make sure that the
 required dependencies by sqlplot-tools are installed.
 
+### Graph Creation
+
+The `dot` representaiton of the final trie can be generated to have a
+standardized representation. Invoke the `-d` option to output this
+format:
+
+``` txt
+./tools/create_fake_data.c 3 10 > creation.txt
+./ti_programm -d creation.txt query.txt | dot -Tsvg > test.svg
+open_command test.svg
+```
+
+![](assets/trie_graphviz.svg)
+
 ## ToDo
 
 - [x] 🌲 Implement the general trie traversal routines
