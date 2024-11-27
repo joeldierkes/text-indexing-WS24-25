@@ -46,38 +46,28 @@ bool contains(struct trie_tree *root, char *element) {
 }
 
 bool delete_helper(struct trie_tree *root, char *element, bool *should_delete) {
-  if (*element == '\0') {
+  if (*element == '\0' && !is_terminal(root)) {
     // The element does not exist in the trie
     return false;
   }
 
-  struct trie_tree *child;
+  if (*element == '\0' && is_terminal(root)) {
+    // At this point we know that the child is _our_ word (this is
+    // important if a suffix of our word without any children is
+    // contained in the trie as well). We can safely remove it and
+    // remove all parents till there is one with other children if it
+    // has no other children.
 
+    *should_delete = number_children(root) == 0;
+    unset_terminal(root);
+    return true;
+  }
+
+  struct trie_tree *child;
   get_specific(root, &child, element);
   if (!child) {
     // The element does not exist in the trie
     return false;
-  }
-
-  if (*(element + 1) == '\0' && is_terminal(child) &&
-      number_children(child) == 0) {
-    // At this point we know that the child is _our_ leaf (this is
-    // important if a suffix of our word without any children is
-    // contained in the trie as well). We can safely remove it and
-    // remove all parents till there is one with other children.
-
-    *should_delete = true;
-    delete_empty_child(root, element);
-    return true;
-  }
-
-  if (*(element + 1) == '\0' && is_terminal(child)) {
-    // This is the case if the word is a suffix of another word in the
-    // trie.
-
-    *should_delete = false;
-    unset_terminal(child);
-    return true;
   }
 
   if (delete_helper(child, element + 1, should_delete)) {
