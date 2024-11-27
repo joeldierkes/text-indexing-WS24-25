@@ -1,3 +1,6 @@
+#ifndef _SPECIFIC_TRIE_H_
+#define _SPECIFIC_TRIE_H_
+
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -31,3 +34,5 @@ void set_terminal(struct trie_tree *);
 void unset_terminal(struct trie_tree *);
 bool is_terminal(struct trie_tree *);
 void free_trie_specific(struct trie_tree **);
+
+#endif  // _SPECIFIC_TRIE_H_

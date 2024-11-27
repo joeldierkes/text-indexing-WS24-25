@@ -1,3 +1,5 @@
+#ifndef _TRIE_H_
+#define _TRIE_H_
 
 #include <stdbool.h>
 
@@ -22,3 +24,5 @@ void free_trie(struct trie_tree **);
 // Prints the DOT representation of the Trie to stdout. This is useful for
 // debugging.
 void print_dot(struct trie_tree *);
+
+#endif  // _TRIE_H_
