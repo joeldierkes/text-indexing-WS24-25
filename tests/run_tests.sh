@@ -32,8 +32,8 @@ function assert_string() {
 	echo "ok $n - $1"
     else
 	echo "not ok $n - $1"
-	echo "$2"
-	echo "$3"
+	echo "Expected: $3"
+	echo "Got: $2"
 	ret=1
     fi
 }
