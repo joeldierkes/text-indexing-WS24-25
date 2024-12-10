@@ -12,7 +12,7 @@ size_t char_to_index(char c) {
 char index_to_char(size_t idx) {
   return (idx < 26) * (idx + 'a') +
          (26 <= idx && idx < 26 + 26) * (idx - 26 + 'A') +
-         (26 + 26 <= idx && idx >= 26 + 26) * (idx - 26 - 26 + '0');
+         (26 + 26 <= idx && idx < 26 + 26 + 10) * (idx - 26 - 26 + '0');
 }
 
 // Contains references to all children. If the pointer is NULL it does not
