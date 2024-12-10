@@ -4,15 +4,18 @@ CFLAGS  = -g -Wall -flto
 
 default: ti_programm
 
-ti_programm: ti_programm.c trie.h trie.o fixed_arr.o
+ti_programm: ti_programm.c trie.h trie.o fixed_arr.o priority_queue_linked_list.o
 	@echo $<
-	$(CC) $(CFLAGS) -o $@ ti_programm.c trie.o fixed_arr.o
+	$(CC) $(CFLAGS) -o $@ ti_programm.c trie.o fixed_arr.o priority_queue_linked_list.o
 
 trie.o: trie.h trie.c specific_trie.h
 	$(CC) $(CFLAGS) -c trie.c
 
 fixed_arr.o: specific_trie.h fixed_arr.c
 	$(CC) $(CFLAGS) -c fixed_arr.c
+
+priority_queue_linked_list.o: priority_queue.h priority_queue_linked_list.c
+	$(CC) $(CFLAGS) -c priority_queue_linked_list.c
 
 .PHONY: clean
 clean:
