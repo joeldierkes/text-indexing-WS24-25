@@ -21,7 +21,7 @@ void init_specific(struct trie_tree **);
 //              function.
 //   - `c`: The character to insert.
 //   - `init`: An initializer function for the trie node.
-bool insert_specific(struct trie_tree *parent, struct trie_tree **child, char c,
+bool insert_specific(struct trie_tree *parent, struct trie_tree **child, char *c,
                      void (*init)(struct trie_tree **));
 
 void delete_empty_child(struct trie_tree *, char *);

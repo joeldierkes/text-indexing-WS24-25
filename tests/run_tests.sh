@@ -62,8 +62,8 @@ function test_task_output() {
     if [[ $? -eq 0 ]]; then
         echo "ok $n - [Valgrind] $1"
     else
-	echo "not ok $n - [Valgrind] $1"
-	echo "$vout$"
+	  echo "not ok $n - [Valgrind] $1"
+	  echo "$vout$"
     fi
 
     rm "$creation"

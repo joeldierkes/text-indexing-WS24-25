@@ -20,7 +20,7 @@ bool insert(struct trie_tree *root, char *element) {
   }
 
   struct trie_tree *child;
-  insert_specific(root, &child, *element, init);
+  insert_specific(root, &child, element, init);
   return insert(child, element + 1);
 }
 
