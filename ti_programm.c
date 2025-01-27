@@ -3,9 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 
 #include "trie.h"
+
 
 struct specific_trie_implementation SPECIFIC_IMPLEMENTATIONS[3];
 struct specific_trie_implementation SPECIFIC_IMPLEMENTATION;
@@ -189,6 +191,12 @@ const char *concat(char* s1, char* s2){
   return ns;
 }
 
+const char *VARIANT_NAMES[] = {
+  "fixed_size_array",
+  "variable_sized_array",
+  "hash_map"
+};
+
 const char *USAGE_INFORMATION =
     "Usage: ti_programm [-tdu] -variante=n INPUT_FILE QUERY_FILE\n"
     "\n"
@@ -250,13 +258,21 @@ int main(int argc, char **argv) {
 
   struct trie_tree *root;
 
+  clock_t construction_begin = clock();
   init(&root);
   insert_multiple(root, fbuffer);
+  double construction_time = ((double)(clock() - construction_begin))/CLOCKS_PER_SEC * 1000;
   free(fbuffer);
+  double construction_memory = (1.0 * get_size(root)) / 1024. / 1024.;
 
+  clock_t query_begin = clock();
   execute_queries(root, queries,
                   mode == PRINT_MODE ? print_status_callback : save_result_callback);
+  double query_time = ((double)(clock() - query_begin))/CLOCKS_PER_SEC * 1000;
   free(queries);
+
+  printf("RESULT name=\"Joel Dierkes\" trie_variant=%s trie_construction_time=%f "
+    "trie_construction_memory=%f query_time=%f\n", VARIANT_NAMES[variante - 1], construction_time, construction_memory, query_time);
 
   switch (mode) {
     case DOT_MODE:

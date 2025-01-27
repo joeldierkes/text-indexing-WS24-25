@@ -82,9 +82,12 @@ void variable_list_get_specific(struct trie_tree *root, struct trie_tree **child
 }
 
 void variable_list_get_children(struct trie_tree *root, struct trie_tree **children) {
-  // TODO
   // Note: `children` is already initialized with the right size.
-  assert(false && "not implemented");
+  priority_queue_collect_children(root->pq, (void**) children);
+  size_t n = variable_list_number_children(root);
+  for (size_t i = 0; i < n; i++) {
+    children[i] = ((Node*)children[i])->child;
+  }
 }
 
 void variable_list_get_labels(struct trie_tree *root, char *labels) {
@@ -98,6 +101,11 @@ bool variable_list_is_terminal(struct trie_tree *root) { return root->is_termina
 void variable_list_set_terminal(struct trie_tree *root) { root->is_terminal = true; }
 
 void variable_list_unset_terminal(struct trie_tree *root) { root->is_terminal = false; }
+
+size_t variable_list_get_size(struct trie_tree *root) {
+  // struct trie_tree + struct PriorityQueue + struct PQNode + struct Node
+  return sizeof(struct trie_tree) + 24 + 16 + 16;
+}
 
 extern struct specific_trie_implementation SPECIFIC_IMPLEMENTATIONS[3];
 
@@ -113,6 +121,7 @@ void register_variable_list() {
     .set_terminal = &variable_list_set_terminal,
     .unset_terminal = &variable_list_unset_terminal,
     .is_terminal = &variable_list_is_terminal,
+     .get_size = &variable_list_get_size,
     .free_trie_specific = &variable_list_free_trie_specific,
 };
   SPECIFIC_IMPLEMENTATIONS[1] = impl;

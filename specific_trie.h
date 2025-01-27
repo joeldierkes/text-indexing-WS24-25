@@ -21,6 +21,7 @@ struct specific_trie_implementation {
     void (*set_terminal)(struct trie_tree *);
     void (*unset_terminal)(struct trie_tree *);
     bool (*is_terminal)(struct trie_tree *);
+    size_t (*get_size)(struct trie_tree *);
     void (*free_trie_specific)(struct trie_tree **);
 };
 

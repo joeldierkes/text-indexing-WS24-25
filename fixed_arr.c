@@ -93,6 +93,10 @@ void fixed_set_terminal(struct trie_tree *root) { root->is_terminal = true; }
 
 void fixed_unset_terminal(struct trie_tree *root) { root->is_terminal = false; }
 
+size_t fixed_get_size(struct trie_tree *root) {
+  return sizeof(root->is_terminal) + sizeof(root->children);
+}
+
 void fixed_free_trie_specific(struct trie_tree **root) {
   for (size_t i = 0; i < FIXED_SIZE_LEN; ++i) {
     if ((*root)->children[i] != NULL) {
@@ -118,6 +122,7 @@ void register_fixed_arr() {
       .set_terminal = &fixed_set_terminal,
       .unset_terminal = &fixed_unset_terminal,
       .is_terminal = &fixed_is_terminal,
+      .get_size = &fixed_get_size,
       .free_trie_specific = &fixed_free_trie_specific,
   };
   SPECIFIC_IMPLEMENTATIONS[0] = impl;

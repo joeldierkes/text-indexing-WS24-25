@@ -39,9 +39,10 @@ bool priority_queue_insert(PriorityQueue *root, void * element) {
   }
 
   if(prev_node == NULL) {
-    assert(root->head == NULL);
+    prev_node = root->head;
     root->head = calloc(1, sizeof(PQNode));
     root->head->element = element;
+    root->head->next = prev_node;
     return true;
   }
 
@@ -141,12 +142,23 @@ bool priority_queue_free(PriorityQueue **root) {
   return true;
 }
 
-bool priority_queue_size(PriorityQueue *root) {
+size_t priority_queue_size(PriorityQueue *root) {
   size_t size = 0;
+  if (!root || !root->head) {
+    return 0;
+  }
   PQNode *tmp_node = root->head;
   while (tmp_node) {
     tmp_node = tmp_node->next;
     size++;
   }
   return size;
+}
+
+void priority_queue_collect_children(PriorityQueue *root, void **children) {
+  PQNode *tmp = root->head;
+  while (tmp && tmp->element) {
+    *(children++) = tmp->element;
+    tmp = tmp->next;
+  }
 }

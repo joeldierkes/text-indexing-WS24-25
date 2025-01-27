@@ -2,6 +2,7 @@
 #define _PRIORITY_QUEUE_H_
 
 #include <stdbool.h>
+#include <stdlib.h>
 
 typedef int COMP_FUNC(void *, void *);
 typedef void FREE_FUNC(void **);
@@ -31,6 +32,9 @@ bool priority_queue_is_empty(PriorityQueue *root);
 bool priority_queue_free(PriorityQueue**);
 
 // Number of elements in the PQ.
-bool priority_queue_size(PriorityQueue*);
+size_t priority_queue_size(PriorityQueue*);
+
+// Iterate over the children and store them in the array.
+void priority_queue_collect_children(PriorityQueue*, void **);
 
 #endif

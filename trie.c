@@ -106,6 +106,22 @@ bool delete(struct trie_tree *root, char *element) {
   return delete_helper(root, element, &should_delete);
 }
 
+
+size_t get_size(struct trie_tree *root) {
+  size_t size = 0;
+  size_t n = SPECIFIC_IMPLEMENTATION.number_children(root);
+  struct trie_tree **children = calloc(n, sizeof(struct trie_tree *));
+  SPECIFIC_IMPLEMENTATION.get_children(root, children);
+
+  for (size_t i = 0; i < n; ++i) {
+    size += get_size(children[i]);
+  }
+
+  free(children);
+
+  return size + SPECIFIC_IMPLEMENTATION.get_size(root);
+}
+
 void free_trie(struct trie_tree **root) { SPECIFIC_IMPLEMENTATION.free_trie_specific(root); }
 
 void print_dot_helper(struct trie_tree *root, char label, char *prefix) {
