@@ -183,7 +183,7 @@ int count_queries(const char *string, size_t len) {
   return ret;
 }
 
-const char *concat(char* s1, char* s2){
+char *concat(char* s1, char* s2){
   char *ns = malloc(strlen(s1) + strlen(s2) + 1);
   ns[0] = '\0';
   strcat(ns, s1);
@@ -272,7 +272,7 @@ int main(int argc, char **argv) {
   double query_time = ((double)(clock() - query_begin))/CLOCKS_PER_SEC * 1000;
   free(queries);
 
-  printf("RESULT name=\"Joel Dierkes\" trie_variant=%s trie_construction_time=%f "
+  printf("RESULT name=Joel_Dierkes trie_variant=%s trie_construction_time=%f "
     "trie_construction_memory=%f query_time=%f\n", VARIANT_NAMES[variante - 1], construction_time, construction_memory, query_time);
 
   switch (mode) {
@@ -283,7 +283,13 @@ int main(int argc, char **argv) {
       die(__LINE__, "Not implemented yet");
       break;
     case TASK_MODE:
-      FILE *fptr = fopen(concat("result_", argv[optind]), "w");
+      char *filename = concat("result_", argv[optind]);
+      if (!strstr(filename, ".txt")) {
+        char *old = filename;
+        filename = concat(filename, ".txt");
+        free(old);
+      }
+      FILE *fptr = fopen(filename, "w");
       for (size_t i = 0; i < number_queries; i++) {
         fprintf(fptr, concat(RESULT[i], "\n"));
       }
