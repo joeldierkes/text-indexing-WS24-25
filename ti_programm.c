@@ -11,7 +11,14 @@ struct specific_trie_implementation SPECIFIC_IMPLEMENTATIONS[3];
 struct specific_trie_implementation SPECIFIC_IMPLEMENTATION;
 
 typedef void(action_callback)(struct trie_tree *, bool status);
-void nothing_callback(struct trie_tree *_, bool __) {}
+
+static char **RESULT;
+
+void save_result_callback(struct trie_tree *_, bool status) {
+  static int CURRENT_RESULT = 0;
+  RESULT[CURRENT_RESULT++] = status ? "true" : "false";
+}
+
 void print_status_callback(struct trie_tree *_, bool status) {
   printf("%s\n", status ? "true" : "false");
 }
@@ -164,6 +171,24 @@ int get_variante(int *argc, char **argv) {
   return ret;
 }
 
+int count_queries(const char *string, size_t len) {
+  int ret = 0;
+  for (int i = 0; i < len; i++) {
+    if (string[i] == '\0') {
+      ret++;
+    }
+  }
+  return ret;
+}
+
+const char *concat(char* s1, char* s2){
+  char *ns = malloc(strlen(s1) + strlen(s2) + 1);
+  ns[0] = '\0';
+  strcat(ns, s1);
+  strcat(ns, s2);
+  return ns;
+}
+
 const char *USAGE_INFORMATION =
     "Usage: ti_programm [-tdu] -variante=n INPUT_FILE QUERY_FILE\n"
     "\n"
@@ -173,6 +198,7 @@ const char *USAGE_INFORMATION =
     "-variante   VARIANTE,  selects the variant to run, in [1, 3].\n"
     "-t          TASK_MODE,  displays the execution status of each word in the query. "
     "One status per line. DEFAULT\n"
+    "-p          PRINT_MODE,  prints the result of each command. One per line."
     "-d          DOT_MODE,   displays the generated trie in a DOT readable format.\n"
     "-u          DUMP_MODE,  dumps the trie one word per line.\n";
 
@@ -186,8 +212,8 @@ int main(int argc, char **argv) {
   SPECIFIC_IMPLEMENTATION = SPECIFIC_IMPLEMENTATIONS[variante - 1];
 
   int opt;
-  enum { TASK_MODE, DOT_MODE, DUMP_MODE } mode = TASK_MODE;
-  while ((opt = getopt(argc, argv, "tdu")) != -1) {
+  enum { TASK_MODE, DOT_MODE, DUMP_MODE, PRINT_MODE } mode = TASK_MODE;
+  while ((opt = getopt(argc, argv, "tdup")) != -1) {
     switch (opt) {
     case 't':
       mode = TASK_MODE;
@@ -195,10 +221,13 @@ int main(int argc, char **argv) {
     case 'd':
       mode = DOT_MODE;
       break;
-    case 'u':
-      mode = DUMP_MODE;
+      case 'u':
+        mode = DUMP_MODE;
       break;
-    default:;
+      case 'p':
+        mode = PRINT_MODE;
+      break;
+      default:;
     }
   }
 
@@ -216,6 +245,9 @@ int main(int argc, char **argv) {
   get_file_content(argv[optind + 1], &queries, &isize);
   convert_dollar_to_null(queries, isize);
 
+  int number_queries = count_queries(queries, isize);
+  RESULT = malloc(number_queries * sizeof(char *));
+
   struct trie_tree *root;
 
   init(&root);
@@ -223,18 +255,24 @@ int main(int argc, char **argv) {
   free(fbuffer);
 
   execute_queries(root, queries,
-                  mode == TASK_MODE ? print_status_callback : nothing_callback);
+                  mode == PRINT_MODE ? print_status_callback : save_result_callback);
   free(queries);
 
   switch (mode) {
-  case DOT_MODE:
-    print_dot(root);
-    break;
-  case DUMP_MODE:
-    die(__LINE__, "Not implemented yet");
-    break;
-  default:
-    break;
+    case DOT_MODE:
+      print_dot(root);
+      break;
+    case DUMP_MODE:
+      die(__LINE__, "Not implemented yet");
+      break;
+    case TASK_MODE:
+      FILE *fptr = fopen(concat("result_", argv[optind]), "w");
+      for (size_t i = 0; i < number_queries; i++) {
+        fprintf(fptr, concat(RESULT[i], "\n"));
+      }
+    fclose(fptr);
+    default:
+      break;
   }
 
   free_trie(&root);

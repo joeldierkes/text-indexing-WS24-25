@@ -67,11 +67,11 @@ function test_task_output_with_variant() {
     # Convert the bash '\n' character to an ANSI C quoted newline
     o=$(echo -ne "$5")
 
-    out=`$BIN "-variante=$2" $creation $queries`
+    out=`$BIN "-variante=$2" -p $creation $queries`
     assert_string "$1" "$2" "$out" "$o"
 
     n=$(($n+1))
-    vout=$(valgrind --error-exitcode=1 --leak-check=full --track-origins=yes $BIN "-variante=$2" $creation $queries 2>&1)
+    vout=$(valgrind --error-exitcode=1 --leak-check=full --track-origins=yes $BIN "-variante=$2" -p $creation $queries 2>&1)
     if [[ $? -eq 0 ]]; then
         echo "ok $n - Variante $2 [Valgrind] $1"
     else
