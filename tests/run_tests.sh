@@ -178,7 +178,13 @@ function test_trie_dollar() {
 		     "a\$\nb\$\nc\$\n" \
 		     "a\$c\nc\$c\nd\$c\n" \
 		     "true\ntrue\nfalse"
+}
 
+function test_trie_commands_with_space() {
+    test_task_output "Trie command with space creation - One letter words" \
+		     "a\$\nb\$\nc\$\n" \
+		     "a\$ c\nc\$ c\nd\$ c\n" \
+		     "true\ntrue\nfalse"
 }
 
 test_usage_information
@@ -187,6 +193,7 @@ test_trie_insertion
 test_trie_contains
 test_trie_delete
 test_trie_dollar
+test_trie_commands_with_space
 
 echo "1..$n"
 exit $ret

@@ -52,7 +52,7 @@ void insert_multiple(struct trie_tree *root, char *s) {
 // The queries follow a specific (probably ill defined by me) grammar:
 // ```
 // <queries> ::= <query> | <query>\n<queries>
-// <query>   ::= <word><null><command>
+// <query>   ::= <word><null><command> | <word><null> <command>
 // <word>    ::= <symbol> | <word><symbol>
 // <symbol>  ::= a-z | A-Z | 0-9
 // <command> ::= i | c | d
@@ -80,6 +80,9 @@ void execute_queries(struct trie_tree *root, char *queries,
 
     while (*(queries++) != '\0')
       ;
+
+    if (*queries == ' ')
+      queries++;
 
     switch (*queries) {
     case 'i':
