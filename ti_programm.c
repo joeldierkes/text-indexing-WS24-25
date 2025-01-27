@@ -56,6 +56,9 @@ void insert_multiple(struct trie_tree *root, char *s) {
 // <null>    ::= \0
 // ```
 //
+// ## Note
+// Dollar signs (`$`) have previously been converted to null characters.
+//
 // A command either returns true or false:
 // - insert (i): Returns true if the element did not exist already and
 //               got inserted, false otherwise.
@@ -130,6 +133,14 @@ void get_file_content(char *filename, char **content, size_t *bytes_read) {
   (*content)[*bytes_read] = '\0';
 }
 
+void convert_dollar_to_null(char *string, size_t len) {
+  for (size_t i = 0; i < len; i++) {
+    if (string[i] == '$') {
+      string[i] = '\0';
+    }
+  }
+}
+
 const char *USAGE_INFORMATION =
     "Usage: ti_programm [-du] INPUT_FILE QUERY_FILE\n"
     "\n"
@@ -167,9 +178,11 @@ int main(int argc, char **argv) {
   size_t fsize;
   char *fbuffer;
   get_file_content(argv[optind], &fbuffer, &fsize);
+  convert_dollar_to_null(fbuffer, fsize);
   size_t isize;
   char *queries;
   get_file_content(argv[optind + 1], &queries, &isize);
+  convert_dollar_to_null(queries, isize);
 
   struct trie_tree *root;
 

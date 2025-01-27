@@ -154,11 +154,20 @@ function test_trie_delete() {
                      "true\nfalse\ntrue\nfalse\ntrue\n"
 }
 
+function test_trie_dollar() {
+    test_task_output "Trie dollar creation - One letter words" \
+		     "a\$\nb\$\nc\$\n" \
+		     "a\$c\nc\$c\nd\$c\n" \
+		     "true\ntrue\nfalse"
+
+}
+
 test_usage_information
 test_trie_creation
 test_trie_insertion
 test_trie_contains
 test_trie_delete
+test_trie_dollar
 
 echo "1..$n"
 exit $ret
