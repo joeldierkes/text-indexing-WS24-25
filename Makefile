@@ -4,9 +4,9 @@ CFLAGS  = -g -Wall -flto
 
 default: ti_programm
 
-ti_programm: ti_programm.c trie.h trie.c specific_trie.h fixed_arr.c priority_queue_linked_list.o variable_list.c
+ti_programm: ti_programm.c trie.h trie.c specific_trie.h fixed_arr.c priority_queue_linked_list.o variable_list.c hashmap_specific.c
 	@echo $<
-	$(CC) $(CFLAGS) -o $@ ti_programm.c trie.c fixed_arr.c priority_queue_linked_list.o variable_list.c
+	$(CC) $(CFLAGS) -o $@ ti_programm.c trie.c fixed_arr.c priority_queue_linked_list.o variable_list.c hashmap_specific.c
 
 priority_queue_linked_list.o: priority_queue.h priority_queue_linked_list.c
 	$(CC) $(CFLAGS) -c priority_queue_linked_list.c

@@ -48,6 +48,7 @@ function assert_string() {
 function test_task_output() {
   test_task_output_with_variant "$1" "1" "$2" "$3" "$4"
   test_task_output_with_variant "$1" "2" "$2" "$3" "$4"
+  test_task_output_with_variant "$1" "3" "$2" "$3" "$4"
 }
 
 # Calls the binary and compared the test output
@@ -97,6 +98,13 @@ function test_usage_information() {
 
     out=$(valgrind --error-exitcode=1 --leak-check=full --track-origins=yes "$BIN" 2>&1)
     assert_string "[Valgrind] Displays usage information" "2" "$out" "Usage: ti_programm [-tpdu] -variante=n INPUT_FILE"
+
+
+    out=`"$BIN"`
+    assert_string "Displays usage information" "3" "$out" "Usage: ti_programm [-tpdu] -variante=n INPUT_FILE"
+
+    out=$(valgrind --error-exitcode=1 --leak-check=full --track-origins=yes "$BIN" 2>&1)
+    assert_string "[Valgrind] Displays usage information" "3" "$out" "Usage: ti_programm [-tpdu] -variante=n INPUT_FILE"
 }
 
 

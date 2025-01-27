@@ -27,5 +27,6 @@ struct specific_trie_implementation {
 
 void register_fixed_arr();
 void register_variable_list();
+void register_hash_map();
 
 #endif  // _SPECIFIC_TRIE_H_

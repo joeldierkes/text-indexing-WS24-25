@@ -213,6 +213,7 @@ const char *USAGE_INFORMATION =
 int main(int argc, char **argv) {
   register_fixed_arr();
   register_variable_list();
+  register_hash_map();
 
   // `getopt` can only work with shortopts or options that are provided via `--`.
   // This is a nasty hack to get the variante.
