@@ -24,11 +24,11 @@ struct trie_tree {
   bool is_terminal;
 };
 
-void init_specific(struct trie_tree **root) {
+void fixed_init_specific(struct trie_tree **root) {
   *root = calloc(1, sizeof(struct trie_tree));
 };
 
-bool insert_specific(struct trie_tree *root, struct trie_tree **child, char *c,
+bool fixed_insert_specific(struct trie_tree *root, struct trie_tree **child, char *c,
                      void (*init)(struct trie_tree **)) {
   size_t idx = char_to_index(*c);
 
@@ -42,17 +42,7 @@ bool insert_specific(struct trie_tree *root, struct trie_tree **child, char *c,
   }
 }
 
-void delete_empty_child(struct trie_tree *root, char *element) {
-  size_t idx = char_to_index(*element);
-
-  // Note that this is disabled in release mode.
-  assert(number_children(root->children[idx]) == 0);
-
-  free(root->children[idx]);
-  root->children[idx] = NULL;
-}
-
-size_t number_children(struct trie_tree *root) {
+size_t fixed_number_children(struct trie_tree *root) {
   size_t res = 0;
   for (size_t i = 0; i < FIXED_SIZE_LEN; ++i) {
     if (root->children[i] != NULL) {
@@ -63,13 +53,23 @@ size_t number_children(struct trie_tree *root) {
   return res;
 }
 
-void get_specific(struct trie_tree *root, struct trie_tree **child,
+void fixed_delete_empty_child(struct trie_tree *root, char *element) {
+  size_t idx = char_to_index(*element);
+
+  // Note that this is disabled in release mode.
+  assert(fixed_number_children(root->children[idx]) == 0);
+
+  free(root->children[idx]);
+  root->children[idx] = NULL;
+}
+
+void fixed_get_specific(struct trie_tree *root, struct trie_tree **child,
                   char *element) {
   size_t idx = char_to_index(*element);
   *child = root->children[idx];
 }
 
-void get_children(struct trie_tree *root, struct trie_tree **children) {
+void fixed_get_children(struct trie_tree *root, struct trie_tree **children) {
   size_t outer = 0;
   for (size_t i = 0; i < FIXED_SIZE_LEN; ++i) {
     if (root->children[i] != NULL) {
@@ -78,7 +78,7 @@ void get_children(struct trie_tree *root, struct trie_tree **children) {
   }
 }
 
-void get_labels(struct trie_tree *root, char *labels) {
+void fixed_get_labels(struct trie_tree *root, char *labels) {
   size_t outer = 0;
   for (size_t i = 0; i < FIXED_SIZE_LEN; ++i) {
     if (root->children[i] != NULL) {
@@ -87,19 +87,38 @@ void get_labels(struct trie_tree *root, char *labels) {
   }
 }
 
-bool is_terminal(struct trie_tree *root) { return root->is_terminal; }
+bool fixed_is_terminal(struct trie_tree *root) { return root->is_terminal; }
 
-void set_terminal(struct trie_tree *root) { root->is_terminal = true; }
+void fixed_set_terminal(struct trie_tree *root) { root->is_terminal = true; }
 
-void unset_terminal(struct trie_tree *root) { root->is_terminal = false; }
+void fixed_unset_terminal(struct trie_tree *root) { root->is_terminal = false; }
 
-void free_trie_specific(struct trie_tree **root) {
+void fixed_free_trie_specific(struct trie_tree **root) {
   for (size_t i = 0; i < FIXED_SIZE_LEN; ++i) {
     if ((*root)->children[i] != NULL) {
-      free_trie_specific(&((*root)->children[i]));
+      fixed_free_trie_specific(&((*root)->children[i]));
     }
   }
 
   free(*root);
   *root = NULL;
+}
+
+extern struct specific_trie_implementation SPECIFIC_IMPLEMENTATIONS[3];
+
+void register_fixed_arr() {
+  struct specific_trie_implementation impl = {
+      .init_specific = &fixed_init_specific,
+      .insert_specific = &fixed_insert_specific,
+      .delete_empty_child = &fixed_delete_empty_child,
+      .number_children = &fixed_number_children,
+      .get_specific = &fixed_get_specific,
+      .get_children = &fixed_get_children,
+      .get_labels = &fixed_get_labels,
+      .set_terminal = &fixed_set_terminal,
+      .unset_terminal = &fixed_unset_terminal,
+      .is_terminal = &fixed_is_terminal,
+      .free_trie_specific = &fixed_free_trie_specific,
+  };
+  SPECIFIC_IMPLEMENTATIONS[0] = impl;
 }

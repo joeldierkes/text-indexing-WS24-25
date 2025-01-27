@@ -28,13 +28,13 @@ echo "TAP version 14"
 
 function assert_string() {
     n=$(($n+1))
-    if [[ "$2" =~ "$3" ]]; then
-	echo "ok $n - $1"
+    if [[ "$3" =~ "$4" ]]; then
+    	echo "ok $n - Variante $2 $1"
     else
-	echo "not ok $n - $1"
-	echo "Expected: $3"
-	echo "Got: $2"
-	ret=1
+	    echo "not ok $n - Variante $2 $1"
+	    echo "Expected: $4"
+	    echo "Got: $3"
+	    ret=1
     fi
 }
 
@@ -46,24 +46,37 @@ function assert_string() {
 #   $3: The query input string of the binary.
 #   $4: The expected output.
 function test_task_output() {
+  test_task_output_with_variant "$1" "1" "$2" "$3" "$4"
+  test_task_output_with_variant "$1" "2" "$2" "$3" "$4"
+}
+
+# Calls the binary and compared the test output
+#
+# Params:
+#   $1: The test description.
+#   $2: The variant to run.
+#   $3: The creation input string of the binary.
+#   $4: The query input string of the binary.
+#   $5: The expected output.
+function test_task_output_with_variant() {
     creation=`mktemp`
-    echo -ne "$2" > "$creation"
+    echo -ne "$3" > "$creation"
     queries=`mktemp`
-    echo -ne "$3" > "$queries"
+    echo -ne "$4" > "$queries"
 
     # Convert the bash '\n' character to an ANSI C quoted newline
-    o=$(echo -ne "$4")
+    o=$(echo -ne "$5")
 
-    out=`$BIN $creation $queries`
-    assert_string "$1" "$out" "$o"
+    out=`$BIN "-variante=$2" $creation $queries`
+    assert_string "$1" "$2" "$out" "$o"
 
     n=$(($n+1))
-    vout=$(valgrind --error-exitcode=1 --leak-check=full --track-origins=yes $BIN $creation $queries 2>&1)
+    vout=$(valgrind --error-exitcode=1 --leak-check=full --track-origins=yes $BIN "-variante=$2" $creation $queries 2>&1)
     if [[ $? -eq 0 ]]; then
-        echo "ok $n - [Valgrind] $1"
+        echo "ok $n - Variante $2 [Valgrind] $1"
     else
-	  echo "not ok $n - [Valgrind] $1"
-	  echo "$vout$"
+  	  echo "not ok $n - Variante $2 [Valgrind] $1"
+	    echo "$vout$"
     fi
 
     rm "$creation"
@@ -74,10 +87,16 @@ function test_task_output() {
 
 function test_usage_information() {
     out=`"$BIN"`
-    assert_string "Displays usage information" "$out" "Usage: ti_programm [-tdu] INPUT_FILE"
+    assert_string "Displays usage information" "1" "$out" "Usage: ti_programm [-tdu] -variante=n INPUT_FILE"
 
     out=$(valgrind --error-exitcode=1 --leak-check=full --track-origins=yes "$BIN" 2>&1)
-    assert_string "[Valgrind] Displays usage information" "$out" "Usage: ti_programm [-tdu] INPUT_FILE"
+    assert_string "[Valgrind] Displays usage information" "1" "$out" "Usage: ti_programm [-tdu] -variante=n INPUT_FILE"
+
+    out=`"$BIN"`
+    assert_string "Displays usage information" "2" "$out" "Usage: ti_programm [-tdu] -variante=n INPUT_FILE"
+
+    out=$(valgrind --error-exitcode=1 --leak-check=full --track-origins=yes "$BIN" 2>&1)
+    assert_string "[Valgrind] Displays usage information" "2" "$out" "Usage: ti_programm [-tdu] -variante=n INPUT_FILE"
 }
 
 
@@ -171,3 +190,5 @@ test_trie_dollar
 
 echo "1..$n"
 exit $ret
+
+}

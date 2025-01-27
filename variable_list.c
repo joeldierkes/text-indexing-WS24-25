@@ -5,6 +5,15 @@
 #include "specific_trie.h"
 #include "priority_queue.h"
 
+// Contains references to all children. If the pointer is NULL it does not
+// exist.
+struct trie_tree {
+  PriorityQueue *pq;
+
+  // Wether this specific node is the end result of an insert.
+  bool is_terminal;
+};
+
 typedef struct Node {
   char element;
 
@@ -15,27 +24,25 @@ int compare_nodes(void *n1, void *n2) {
   return ((Node*)n2)->element - ((Node*)n1)->element;
 }
 
+void variable_list_free_trie_specific(struct trie_tree **root) {
+  priority_queue_free(&((*root)->pq));
+
+  free(*root);
+  *root = NULL;
+}
+
 void free_node(void **n) {
-  free_trie_specific(&(*((Node** )n))->child);
+  variable_list_free_trie_specific(&(*((Node** )n))->child);
   free(*n);
   *n = NULL;
 }
 
-// Contains references to all children. If the pointer is NULL it does not
-// exist.
-struct trie_tree {
-  PriorityQueue *pq;
-
-  // Wether this specific node is the end result of an insert.
-  bool is_terminal;
-};
-
-void init_specific(struct trie_tree **root) {
+void variable_list_init_specific(struct trie_tree **root) {
   *root = calloc(1, sizeof(struct trie_tree));
   priority_queue_init(&((*root)->pq), compare_nodes, free_node);
 };
 
-bool insert_specific(struct trie_tree *root, struct trie_tree **child, char *c,
+bool variable_list_insert_specific(struct trie_tree *root, struct trie_tree **child, char *c,
                      void (*init)(struct trie_tree **)) {
   if (priority_queue_contains(root->pq, c)) {
     *child = ((struct Node*) priority_queue_get(root->pq, c))->child;
@@ -50,7 +57,7 @@ bool insert_specific(struct trie_tree *root, struct trie_tree **child, char *c,
   }
 }
 
-void delete_empty_child(struct trie_tree *root, char *element) {
+void variable_list_delete_empty_child(struct trie_tree *root, char *element) {
   Node tmp_node;
   tmp_node.element = *element;
   Node *node = priority_queue_get(root->pq, &tmp_node);
@@ -61,11 +68,11 @@ void delete_empty_child(struct trie_tree *root, char *element) {
   priority_queue_delete(root->pq, &tmp_node);
 }
 
-size_t number_children(struct trie_tree *root) {
+size_t variable_list_number_children(struct trie_tree *root) {
   return priority_queue_size(root->pq);
 }
 
-void get_specific(struct trie_tree *root, struct trie_tree **child,
+void variable_list_get_specific(struct trie_tree *root, struct trie_tree **child,
     char *element) {
   Node tmp_node;
   tmp_node.element = *element;
@@ -74,27 +81,39 @@ void get_specific(struct trie_tree *root, struct trie_tree **child,
   else *child = node->child;
 }
 
-void get_children(struct trie_tree *root, struct trie_tree **children) {
+void variable_list_get_children(struct trie_tree *root, struct trie_tree **children) {
   // TODO
   // Note: `children` is already initialized with the right size.
   assert(false && "not implemented");
 }
 
-void get_labels(struct trie_tree *root, char *labels) {
+void variable_list_get_labels(struct trie_tree *root, char *labels) {
   // TODO
   // Note: `labels` is already initialized with the right size.
   assert(false && "not implemented");
 }
 
-bool is_terminal(struct trie_tree *root) { return root->is_terminal; }
+bool variable_list_is_terminal(struct trie_tree *root) { return root->is_terminal; }
 
-void set_terminal(struct trie_tree *root) { root->is_terminal = true; }
+void variable_list_set_terminal(struct trie_tree *root) { root->is_terminal = true; }
 
-void unset_terminal(struct trie_tree *root) { root->is_terminal = false; }
+void variable_list_unset_terminal(struct trie_tree *root) { root->is_terminal = false; }
 
-void free_trie_specific(struct trie_tree **root) {
-  priority_queue_free(&((*root)->pq));
+extern struct specific_trie_implementation SPECIFIC_IMPLEMENTATIONS[3];
 
-  free(*root);
-  *root = NULL;
+void register_variable_list() {
+  struct specific_trie_implementation impl = {
+    .init_specific = &variable_list_init_specific,
+    .insert_specific = &variable_list_insert_specific,
+    .delete_empty_child = &variable_list_delete_empty_child,
+    .number_children = &variable_list_number_children,
+    .get_specific = &variable_list_get_specific,
+    .get_children = &variable_list_get_children,
+    .get_labels = &variable_list_get_labels,
+    .set_terminal = &variable_list_set_terminal,
+    .unset_terminal = &variable_list_unset_terminal,
+    .is_terminal = &variable_list_is_terminal,
+    .free_trie_specific = &variable_list_free_trie_specific,
+};
+  SPECIFIC_IMPLEMENTATIONS[1] = impl;
 }

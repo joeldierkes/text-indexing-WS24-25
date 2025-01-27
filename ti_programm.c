@@ -7,6 +7,9 @@
 
 #include "trie.h"
 
+struct specific_trie_implementation SPECIFIC_IMPLEMENTATIONS[3];
+struct specific_trie_implementation SPECIFIC_IMPLEMENTATION;
+
 typedef void(action_callback)(struct trie_tree *, bool status);
 void nothing_callback(struct trie_tree *_, bool __) {}
 void print_status_callback(struct trie_tree *_, bool status) {
@@ -141,18 +144,44 @@ void convert_dollar_to_null(char *string, size_t len) {
   }
 }
 
+
+int get_variante(int *argc, char **argv) {
+  int ret = 1;
+
+  for (int i = 1; i < *argc; i++) {
+    if (strstr(argv[i], "-variante=")) {
+      ret = atoi(argv[i] + strlen("-variante="));
+      *argc = *argc - 1;
+      for (int j = i; j < *argc; j++) {
+        argv[j] = argv[j + 1];
+      }
+    }
+  }
+
+  return ret;
+}
+
 const char *USAGE_INFORMATION =
-    "Usage: ti_programm [-tdu] INPUT_FILE QUERY_FILE\n"
+    "Usage: ti_programm [-tdu] -variante=n INPUT_FILE QUERY_FILE\n"
     "\n"
     "The main entry point for the text indexing exercise 2024/25.\n"
     "\n"
     "options:\n"
-    "-t   TASK_MODE,  displays the execution status of each word in the query. "
+    "-variante   VARIANTE,  selects the variant to run, in [1, 3].\n"
+    "-t          TASK_MODE,  displays the execution status of each word in the query. "
     "One status per line. DEFAULT\n"
-    "-d   DOT_MODE,   displays the generated trie in a DOT readable format.\n"
-    "-u   DUMP_MODE,  dumps the trie one word per line.\n";
+    "-d          DOT_MODE,   displays the generated trie in a DOT readable format.\n"
+    "-u          DUMP_MODE,  dumps the trie one word per line.\n";
 
 int main(int argc, char **argv) {
+  register_fixed_arr();
+  register_variable_list();
+
+  // `getopt` can only work with shortopts or options that are provided via `--`.
+  // This is a nasty hack to get the variante.
+  int variante = get_variante(&argc, argv);
+  SPECIFIC_IMPLEMENTATION = SPECIFIC_IMPLEMENTATIONS[variante - 1];
+
   int opt;
   enum { TASK_MODE, DOT_MODE, DUMP_MODE } mode = TASK_MODE;
   while ((opt = getopt(argc, argv, "tdu")) != -1) {
