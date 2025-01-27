@@ -3,6 +3,14 @@
 My C implementation of the assignment for text indexing course for the
 WS 2024/25. In brief, the task is to implement three trie variants.
 
+## Structure
+
+The fixed-size, variable-size array and hash-map versions of the trie are
+implemented. A general trie implementation is given in `trie.c` and `trie.h`
+that separates the tree traversal from the specific implementations.
+`specific_trie.h/c` abstract the calls to the specific node calls.
+
+
 ## Development
 
 `gcc` with a suitable version (in my case `13.3.1 20240614`) is
@@ -15,14 +23,16 @@ task. Run `make test` to run the test suite. `ti_programm` by itself
 prints the help message:
 
 ```txt
-Usage: ti_programm [-du] INPUT_FILE QUERY_FILE
+Usage: ti_programm [-tpdu] -variante=n INPUT_FILE QUERY_FILE
 
 The main entry point for the text indexing exercise 2024/25.
 
 options:
--t   TASK_MODE,  displays the execution status of each word in the query. One status per line. DEFAULT
--d   DOT_MODE,   displays the generated trie in a DOT readable format.
--u   DUMP_MODE,  dumps the trie one word per line.
+-variante   VARIANTE,  selects the variant to run, in [1, 3].
+-t          TASK_MODE,  displays the execution status of each word in the query. One status per line. DEFAULT
+-p          PRINT_MODE,  prints the result of each command. One per line.
+-d          DOT_MODE,   displays the generated trie in a DOT readable format.
+-u          DUMP_MODE,  dumps the trie one word per line.
 ```
 
 Note that some nice-to-have features are added and can be opted in via
@@ -40,7 +50,7 @@ be used to generate performance plots. Run `make sqlplot-tools` to
 initialize the submodule and compile the tools. Make sure that the
 required dependencies by sqlplot-tools are installed.
 
-### Graph Creation
+### Graph Creation - Does not work for now
 
 The `dot` representaiton of the final trie can be generated to have a
 standardized representation. Invoke the `-d` option to output this
@@ -64,27 +74,19 @@ open_command test.svg
   - [x] Insert
   - [x] Contains
   - [x] Delete
-- [ ] 📏 Implement the variable sized array version
-  - [ ] Insert
-  - [ ] Contains
-  - [ ] Delete
-- [ ] 🗃️  Implement the hash table version
-  - [ ] Insert
-  - [ ] Contains
-  - [ ] Delete
+- [x] 📏 Implement the variable sized array version
+  - [x] Insert
+  - [x] Contains
+  - [x] Delete
+- [x] 🗃️  Implement the hash table version
+  - [x] Insert
+  - [x] Contains
+  - [x] Delete
 - [x] Add the code to handle the cli
 - [x] Add the contruction from input file routine
 - [x] Add the queries from input file routine
-- [ ] Format the output according to the task
-- [ ] Add a suitable test suite
-- [ ] Controll if the query null terminator before the action is
+- [x] Format the output according to the task
+- [x] Add a suitable test suite
+- [x] Controll if the query null terminator before the action is
       prefixed with a space
 - [x] Implement a cleanup (free) function
-
-## Questions
-
-- [ ] Is there a space before the null terminator in the `query.txt`?
-- [ ] Ask for an example `creation` and `query` file.
-- [ ] Ask about the inconsistencies in the task file.
-- [ ] Ask about the setup the tests will be run on (SIMD, RAM).
-- [ ] Ask about the input files (i.e. distribution of characters, size).

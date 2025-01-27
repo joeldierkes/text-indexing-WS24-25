@@ -87,16 +87,16 @@ function test_task_output_with_variant() {
 
 function test_usage_information() {
     out=`"$BIN"`
-    assert_string "Displays usage information" "1" "$out" "Usage: ti_programm [-tdu] -variante=n INPUT_FILE"
+    assert_string "Displays usage information" "1" "$out" "Usage: ti_programm [-tpdu] -variante=n INPUT_FILE"
 
     out=$(valgrind --error-exitcode=1 --leak-check=full --track-origins=yes "$BIN" 2>&1)
-    assert_string "[Valgrind] Displays usage information" "1" "$out" "Usage: ti_programm [-tdu] -variante=n INPUT_FILE"
+    assert_string "[Valgrind] Displays usage information" "1" "$out" "Usage: ti_programm [-tpdu] -variante=n INPUT_FILE"
 
     out=`"$BIN"`
-    assert_string "Displays usage information" "2" "$out" "Usage: ti_programm [-tdu] -variante=n INPUT_FILE"
+    assert_string "Displays usage information" "2" "$out" "Usage: ti_programm [-tpdu] -variante=n INPUT_FILE"
 
     out=$(valgrind --error-exitcode=1 --leak-check=full --track-origins=yes "$BIN" 2>&1)
-    assert_string "[Valgrind] Displays usage information" "2" "$out" "Usage: ti_programm [-tdu] -variante=n INPUT_FILE"
+    assert_string "[Valgrind] Displays usage information" "2" "$out" "Usage: ti_programm [-tpdu] -variante=n INPUT_FILE"
 }
 
 

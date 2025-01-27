@@ -198,7 +198,7 @@ const char *VARIANT_NAMES[] = {
 };
 
 const char *USAGE_INFORMATION =
-    "Usage: ti_programm [-tdu] -variante=n INPUT_FILE QUERY_FILE\n"
+    "Usage: ti_programm [-tpdu] -variante=n INPUT_FILE QUERY_FILE\n"
     "\n"
     "The main entry point for the text indexing exercise 2024/25.\n"
     "\n"
@@ -206,7 +206,7 @@ const char *USAGE_INFORMATION =
     "-variante   VARIANTE,  selects the variant to run, in [1, 3].\n"
     "-t          TASK_MODE,  displays the execution status of each word in the query. "
     "One status per line. DEFAULT\n"
-    "-p          PRINT_MODE,  prints the result of each command. One per line."
+    "-p          PRINT_MODE,  prints the result of each command. One per line.\n"
     "-d          DOT_MODE,   displays the generated trie in a DOT readable format.\n"
     "-u          DUMP_MODE,  dumps the trie one word per line.\n";
 
