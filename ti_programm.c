@@ -142,7 +142,7 @@ void convert_dollar_to_null(char *string, size_t len) {
 }
 
 const char *USAGE_INFORMATION =
-    "Usage: ti_programm [-du] INPUT_FILE QUERY_FILE\n"
+    "Usage: ti_programm [-tdu] INPUT_FILE QUERY_FILE\n"
     "\n"
     "The main entry point for the text indexing exercise 2024/25.\n"
     "\n"
@@ -155,7 +155,7 @@ const char *USAGE_INFORMATION =
 int main(int argc, char **argv) {
   int opt;
   enum { TASK_MODE, DOT_MODE, DUMP_MODE } mode = TASK_MODE;
-  while ((opt = getopt(argc, argv, "du")) != -1) {
+  while ((opt = getopt(argc, argv, "tdu")) != -1) {
     switch (opt) {
     case 't':
       mode = TASK_MODE;

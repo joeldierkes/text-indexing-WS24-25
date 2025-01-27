@@ -74,10 +74,10 @@ function test_task_output() {
 
 function test_usage_information() {
     out=`"$BIN"`
-    assert_string "Displays usage information" "$out" "Usage: ti_programm [-du] INPUT_FILE"
+    assert_string "Displays usage information" "$out" "Usage: ti_programm [-tdu] INPUT_FILE"
 
     out=$(valgrind --error-exitcode=1 --leak-check=full --track-origins=yes "$BIN" 2>&1)
-    assert_string "[Valgrind] Displays usage information" "$out" "Usage: ti_programm [-du] INPUT_FILE"
+    assert_string "[Valgrind] Displays usage information" "$out" "Usage: ti_programm [-tdu] INPUT_FILE"
 }
 
 
