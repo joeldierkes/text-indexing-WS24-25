@@ -55,7 +55,7 @@ bool priority_queue_insert(PriorityQueue *root, void * element) {
     return false;
   }
 
-  insert_element_after(tmp_node, element);
+  insert_element_after(prev_node, element);
   return true;
 }
 

@@ -179,11 +179,15 @@ function test_trie_dollar() {
 		     "a\$c\nc\$c\nd\$c\n" \
 		     "true\ntrue\nfalse"
 
-
     test_task_output "Trie dollar big test" \
 		     "apple\$\nbook\$\ncfddf\$\napp\$\nseven\$\nap\$\nboo\$\nbooklets\$\n" \
 		     "apple\$c\nap\$c\napp\$c\napple\$d\napple\$c\n" \
 		     "true\ntrue\ntrue\ntrue\nfalse"
+
+    test_task_output "Trie dollar big big test" \
+		     "apple\$\nbook\$\ncfddf\$\napp\$\nseven\$\nap\$\nboo\$\nbooklets\$\napple\$\n" \
+		     "apple\$c\nap\$c\napp\$c\napple\$d\napple\$c\napple\$i\napple\$i\n" \
+		     "true\ntrue\ntrue\ntrue\nfalse\ntrue\nfalse"
 }
 
 function test_trie_commands_with_space() {
