@@ -44,8 +44,10 @@ void variable_list_init_specific(struct trie_tree **root) {
 
 bool variable_list_insert_specific(struct trie_tree *root, struct trie_tree **child, char *c,
                      void (*init)(struct trie_tree **)) {
-  if (priority_queue_contains(root->pq, c)) {
-    *child = ((struct Node*) priority_queue_get(root->pq, c))->child;
+  Node tmp_node;
+  tmp_node.element = *c;
+  if (priority_queue_contains(root->pq, &tmp_node)) {
+    *child = ((struct Node*) priority_queue_get(root->pq, &tmp_node))->child;
     return false;
   } else {
     init(child);
